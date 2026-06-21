@@ -1,0 +1,6 @@
+credentials.json
+gold_tracker.csv
+__pycache__/
+*.pyc
+grt_page.html
+sheet_test.py

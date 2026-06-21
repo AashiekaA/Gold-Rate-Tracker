@@ -24,11 +24,13 @@ jobs:
 
       - name: Create Google Credentials
         run: |
-          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+          echo "${GOOGLE_CREDENTIALS}" > credentials.json
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Run Gold Tracker
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          python main.py
+          python main.py         

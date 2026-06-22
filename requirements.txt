@@ -3,7 +3,5 @@ pandas
 beautifulsoup4
 gspread
 oauth2client
-requests
-pandas
 google-auth
 google-auth-oauthlib

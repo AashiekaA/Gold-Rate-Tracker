@@ -10,7 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from pathlib import Path
 
-def update_google_sheet(date, scheme, rate, investment, grams):
+def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
     scope = [
         "https://spreadsheets.google.com/feeds",
@@ -37,18 +37,19 @@ def update_google_sheet(date, scheme, rate, investment, grams):
             break
 
     values = [
-        date,
-        scheme,
-        rate,
-        investment,
-        grams
-    ]
+    date,
+    scheme,
+    rate,
+    investment,
+    grams,
+    diff_text
+]
 
     if found_row:
 
         sheet.update(
             [values],
-            f"A{found_row}:E{found_row}",  
+            f"A{found_row}:F{found_row}"  
         )
 
         print("Google Sheet row updated")
@@ -182,12 +183,36 @@ else:
 # Save file
 df.to_csv(CSV_FILE, index=False)
 
+# -----------------------------
+# DAY-OVER-DAY DIFFERENCE
+# -----------------------------
+
+if len(df) > 1:
+
+    yesterday_rate = int(df.iloc[-2]["Rate"])
+
+    rate_difference = rate - yesterday_rate
+
+    if rate_difference > 0:
+        diff_text = f"+₹{rate_difference}"
+    elif rate_difference < 0:
+        diff_text = f"-₹{abs(rate_difference)}"
+    else:
+        diff_text = "₹0"
+
+else:
+
+    yesterday_rate = rate
+    rate_difference = 0
+    diff_text = "N/A"
+
 update_google_sheet(
     today,
     SCHEME_NAME,
     rate,
     INVESTMENT_AMOUNT,
-    grams
+    grams,
+    diff_text
 )
 
 #update_google_sheet(
@@ -211,6 +236,9 @@ Date: {today}
 
 22K Gold Rate: ₹{rate}
 
+Yesterday's Rate: ₹{yesterday_rate}
+Difference from Yesterday: {diff_text}
+
 Investment Amount: ₹{INVESTMENT_AMOUNT}
 
 Weight Acquired: {grams} g
@@ -227,6 +255,8 @@ Best Possible Grams: {best_grams} g
 print("\n----------------------------------")
 print(f"Today's Date      : {today}")
 print(f"22K Gold Rate     : ₹{rate}")
+print(f"Yesterday Rate    : ₹{yesterday_rate}")
+print(f"Day Change        : {diff_text}")
 print(f"Investment Amount : ₹{INVESTMENT_AMOUNT}")
 print(f"Weight Acquired   : {grams} g")
 print("----------------------------------")

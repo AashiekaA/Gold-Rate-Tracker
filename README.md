@@ -58,7 +58,7 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 *(Add screenshot here)*
 
 ### GitHub Actions Workflow
-*(Add screenshot here)*
+![GitHub Actions Workflow](images/github-actions.png)
 
 ---
 

@@ -34,11 +34,8 @@ def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
         yesterday_row = records[-2]
 
-        print("Yesterday row:", yesterday_row)
-
         yesterday_rate = int(yesterday_row[2])
 
-        print("Yesterday rate found:", yesterday_rate)
         found_row = None
 
         for idx, row in enumerate(records[1:], start=2):

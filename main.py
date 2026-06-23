@@ -28,23 +28,17 @@ def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
     records = sheet.get_all_values()
 
-    print("TOTAL ROWS:", len(records))
-    print("LAST ROW:", records[-1])
-
     yesterday_rate = None
 
-    if len(records) > 1:
+    if len(records) > 2:
 
-        last_row = records[-1]
+        yesterday_row = records[-2]
 
-        print("Checking last row:", last_row)
+        print("Yesterday row:", yesterday_row)
 
-        if len(last_row) > 2 and last_row[0] != date:
+        yesterday_rate = int(yesterday_row[2])
 
-            yesterday_rate = int(last_row[2])
-
-            print("Yesterday rate found:", yesterday_rate)
-
+        print("Yesterday rate found:", yesterday_rate)
         found_row = None
 
         for idx, row in enumerate(records[1:], start=2):

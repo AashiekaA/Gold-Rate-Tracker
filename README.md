@@ -8,7 +8,7 @@ This project demonstrates an end-to-end automation workflow using Python, GitHub
 
 The application extracts the latest gold rate, calculates the gold weight acquired for a predefined investment amount, maintains historical records, tracks monthly highs and lows, analyzes day-over-day price movements, and automatically updates Google Sheets while sending email notifications.
 
-The entire workflow is cloud-hosted and executes automatically through GitHub Actions without requiring manual intervention.
+The entire workflow is cloud-hosted and executes automatically through GitHub Actions without requiring manual intervention. The project was enhanced to perform day-over-day price comparison using historical Google Sheets data, providing additional trend visibility for investment tracking.
 
 ---
 
@@ -37,15 +37,15 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 
 ## 🔗 Project Workflow
 
-1. Fetch daily 22K gold rate from GRT Jewellers
-2. Extract and validate gold rate data
-3. Calculate gold weight based on investment amount
-4. Store historical records in CSV format
-5. Update Google Sheets automatically
-6. Analyze monthly high and low rates
-7. Calculate day-over-day price changes
-8. Generate and send email notifications
-9. Execute automatically using GitHub Actions
+1. Fetches the latest 22K gold rate from the GRT Jewellers website
+2. Extracts the current gold rate using Python and Regular Expressions
+3. Calculates the gold weight acquired for the configured investment amount
+4. Retrieves historical data from Google Sheets
+5. Calculates the day-over-day rate difference
+6. Updates the Google Sheet with the latest rate and analysis
+7. Performs monthly low/high rate analysis
+8. Sends an automated email summary
+9. Runs automatically every day using GitHub Actions
 
 ---
 
@@ -64,15 +64,14 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 
 ## 🔗 Features
 
-- Automated daily gold rate tracking
-- Historical data storage and maintenance
-- Gold weight calculation for investment planning
-- Google Sheets integration
-- Automated email notifications
-- Monthly high and low rate analysis
-- Day-over-day price difference tracking
-- GitHub Actions automation
-- Secure credential management using GitHub Secrets
+- Automated daily tracking of GRT 22K gold rates
+- Calculates gold weight acquired for a fixed investment amount
+- Stores historical records in Google Sheets
+- Sends automated email notifications
+- Tracks day-over-day price movement
+- Identifies monthly low and monthly high rates
+- Calculates best possible grams based on monthly low
+- Fully automated using GitHub Actions
 
 ---
 
@@ -81,19 +80,26 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 - Python
 - Pandas
 - Requests
-- Regular Expressions (Regex)
 - Google Sheets API (gspread)
-- SMTP Email Automation
+- Gmail SMTP
 - GitHub Actions
-- GitHub Secrets
-
+- JSON Configuration
 ---
+
+## 🔗 Configuration
+
+The application is configured through:
+
+- `config.json` for investment amount, scheme name, and notification emails
+- GitHub Secrets for email credentials
+- Google Service Account credentials for Google Sheets integration
+
+This design allows configuration changes without modifying the source code.
 
 ## 🔗 Data Sources
 
 - GRT Jewellers Website
 - Google Sheets
-- Local CSV Historical Dataset
 
 ---
 

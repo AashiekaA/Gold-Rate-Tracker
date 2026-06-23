@@ -28,6 +28,16 @@ def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
     records = sheet.get_all_values()
 
+    yesterday_rate = None
+
+if len(records) > 1:
+
+    last_row = records[-1]
+
+    if len(last_row) > 2 and last_row[0] != date:
+
+        yesterday_rate = int(last_row[2])
+
     found_row = None
 
     for idx, row in enumerate(records[1:], start=2):
@@ -59,6 +69,8 @@ def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
         sheet.append_row(values)
 
         print("Google Sheet row added")
+
+    return yesterday_rate
 
 def send_email(subject, body):
 
@@ -183,13 +195,17 @@ else:
 # Save file
 df.to_csv(CSV_FILE, index=False)
 
-# -----------------------------
-# DAY-OVER-DAY DIFFERENCE
-# -----------------------------
 
-if len(df) > 1:
+yesterday_rate = update_google_sheet(
+    today,
+    SCHEME_NAME,
+    rate,
+    INVESTMENT_AMOUNT,
+    grams,
+    "N/A"
+)
 
-    yesterday_rate = int(df.iloc[-2]["Rate"])
+if yesterday_rate is not None:
 
     rate_difference = rate - yesterday_rate
 
@@ -202,9 +218,8 @@ if len(df) > 1:
 
 else:
 
-    yesterday_rate = rate
-    rate_difference = 0
     diff_text = "N/A"
+    yesterday_rate = "N/A"
 
 update_google_sheet(
     today,
@@ -215,13 +230,6 @@ update_google_sheet(
     diff_text
 )
 
-#update_google_sheet(
-#    today,
-#    SCHEME_NAME,
-#    rate,
-#    INVESTMENT_AMOUNT,
-#    grams
-#)
 
 # -----------------------------
 # MONTHLY ANALYSIS

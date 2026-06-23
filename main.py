@@ -30,47 +30,47 @@ def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
     yesterday_rate = None
 
-if len(records) > 1:
+    if len(records) > 1:
 
-    last_row = records[-1]
+        last_row = records[-1]
 
-    if len(last_row) > 2 and last_row[0] != date:
+        if len(last_row) > 2 and last_row[0] != date:
 
-        yesterday_rate = int(last_row[2])
+            yesterday_rate = int(last_row[2])
 
-    found_row = None
+        found_row = None
 
-    for idx, row in enumerate(records[1:], start=2):
+        for idx, row in enumerate(records[1:], start=2):
 
-        if len(row) > 0 and row[0] == date:
-            found_row = idx
-            break
+            if len(row) > 0 and row[0] == date:
+                found_row = idx
+                break
 
-    values = [
-    date,
-    scheme,
-    rate,
-    investment,
-    grams,
-    diff_text
-]
+        values = [
+        date,
+        scheme,
+        rate,
+        investment,
+        grams,
+        diff_text
+    ]
 
-    if found_row:
+        if found_row:
 
-        sheet.update(
-            [values],
-            f"A{found_row}:F{found_row}"  
-        )
+            sheet.update(
+                [values],
+                f"A{found_row}:F{found_row}"  
+            )
 
-        print("Google Sheet row updated")
+            print("Google Sheet row updated")
 
-    else:
+        else:
 
-        sheet.append_row(values)
+            sheet.append_row(values)
 
-        print("Google Sheet row added")
+            print("Google Sheet row added")
 
-    return yesterday_rate
+        return yesterday_rate
 
 def send_email(subject, body):
 
@@ -104,8 +104,6 @@ def send_email(subject, body):
 with open("config.json", "r") as f:
     config = json.load(f)
 
-with open("config.json", "r") as f:
-    config = json.load(f)
 
 INVESTMENT_AMOUNT = config["current_investment_amount"]
 SCHEME_NAME = config["scheme_name"]

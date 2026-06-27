@@ -8,7 +8,6 @@ from email.mime.text import MIMEText
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
-from pathlib import Path
 
 def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
@@ -131,7 +130,6 @@ NOTIFICATION_EMAILS = config["notification_emails"]
 EMAIL_USER = os.environ["EMAIL_USER"]
 EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
 
-CSV_FILE = "gold_tracker.csv"
 
 # -----------------------------
 # FETCH GRT WEBSITE
@@ -166,52 +164,6 @@ rate = int(match.group(1))
 grams = round(INVESTMENT_AMOUNT / rate, 4)
 
 today = datetime.now().strftime("%Y-%m-%d")
-
-new_row = {
-    "Date": today,
-    "Rate": rate,
-    "Investment": INVESTMENT_AMOUNT,
-    "Grams": grams
-}
-
-# -----------------------------
-# CREATE / UPDATE CSV
-# -----------------------------
-if Path(CSV_FILE).exists():
-
-    df = pd.read_csv(CSV_FILE)
-
-    if today in df["Date"].astype(str).values:
-
-        df.loc[
-            df["Date"].astype(str) == today,
-            ["Rate", "Investment", "Grams"]
-        ] = [
-            rate,
-            INVESTMENT_AMOUNT,
-            grams
-        ]
-
-        print("Today's record updated")
-
-    else:
-
-        df = pd.concat(
-            [df, pd.DataFrame([new_row])],
-            ignore_index=True
-        )
-
-        print("New record added")
-
-else:
-
-    df = pd.DataFrame([new_row])
-
-    print("Tracker file created")
-
-# Save file
-df.to_csv(CSV_FILE, index=False)
-
 
 yesterday_rate = update_google_sheet(
     today,
@@ -255,8 +207,6 @@ update_google_sheet(
 sheet_df = get_sheet_dataframe()
 
 sheet_df["Rate"] = pd.to_numeric(sheet_df["Rate"])
-
-print(sheet_df)
 
 month_low = sheet_df["Rate"].min()
 month_high = sheet_df["Rate"].max()

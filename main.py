@@ -70,6 +70,27 @@ def update_google_sheet(date, scheme, rate, investment, grams, diff_text):
 
         return yesterday_rate
 
+def get_sheet_dataframe():
+
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        "credentials.json",
+        scope
+    )
+
+    client = gspread.authorize(creds)
+
+    sheet = client.open("GRT Gold Tracker").sheet1
+
+    records = sheet.get_all_records()
+
+    return pd.DataFrame(records)
+
+
 def send_email(subject, body):
 
     msg = MIMEText(body)
@@ -230,8 +251,15 @@ update_google_sheet(
 # -----------------------------
 # MONTHLY ANALYSIS
 # -----------------------------
-month_low = df["Rate"].min()
-month_high = df["Rate"].max()
+
+sheet_df = get_sheet_dataframe()
+
+sheet_df["Rate"] = pd.to_numeric(sheet_df["Rate"])
+
+print(sheet_df)
+
+month_low = sheet_df["Rate"].min()
+month_high = sheet_df["Rate"].max()
 
 best_grams = round(INVESTMENT_AMOUNT / month_low, 4)
 

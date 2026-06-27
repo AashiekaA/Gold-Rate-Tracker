@@ -77,6 +77,7 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 
 ## 🔗 Architecture
 
+```text
 GRT Jewellers Website
           │
           ▼
@@ -88,7 +89,7 @@ Google Sheets (Historical Data)
     ┌─────┴─────┐
     ▼           ▼
 Yesterday    Monthly Analysis
-Difference   (Low / High)
+Difference   (Low /High)
     │           │
     └─────┬─────┘
           ▼
@@ -96,7 +97,7 @@ Email Notification
           │
           ▼
 GitHub Actions (Daily Automation)
-
+```
 ---
 
 ## 🔗 Tools Used

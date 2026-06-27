@@ -6,7 +6,7 @@
 
 This project demonstrates an end-to-end automation workflow using Python, GitHub Actions, Google Sheets, and email notifications to monitor daily 22K gold rates from GRT Jewellers.
 
-The application extracts the latest gold rate, calculates the gold weight acquired for a predefined investment amount, maintains historical records, tracks monthly highs and lows, analyzes day-over-day price movements, and automatically updates Google Sheets while sending email notifications.
+The application extracts the latest 22K gold rate, calculates the gold weight acquired for a predefined investment amount, stores historical records in Google Sheets, analyzes day-over-day price movements, calculates monthly high and low rates directly from historical data, and automatically sends email notifications with daily investment insights.
 
 The entire workflow is cloud-hosted and executes automatically through GitHub Actions without requiring manual intervention. The project was enhanced to perform day-over-day price comparison using historical Google Sheets data, providing additional trend visibility for investment tracking.
 
@@ -40,10 +40,10 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 1. Fetches the latest 22K gold rate from the GRT Jewellers website
 2. Extracts the current gold rate using Python and Regular Expressions
 3. Calculates the gold weight acquired for the configured investment amount
-4. Retrieves historical data from Google Sheets
-5. Calculates the day-over-day rate difference
-6. Updates the Google Sheet with the latest rate and analysis
-7. Performs monthly low/high rate analysis
+4. Updates Google Sheets with the latest daily record
+5. Retrieves historical data from Google Sheets
+6. Calculates day-over-day price differences
+7. Performs monthly low/high analysis using Google Sheets history
 8. Sends an automated email summary
 9. Runs automatically every day using GitHub Actions
 
@@ -66,7 +66,7 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 
 - Automated daily tracking of GRT 22K gold rates
 - Calculates gold weight acquired for a fixed investment amount
-- Stores historical records in Google Sheets
+- Uses Google Sheets as the single source of truth for historical data
 - Sends automated email notifications
 - Tracks day-over-day price movement
 - Identifies monthly low and monthly high rates
@@ -75,11 +75,36 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 
 ---
 
+## 🔗 Architecture
+
+GRT Jewellers Website
+          │
+          ▼
+Python Web Scraper
+          │
+          ▼
+Google Sheets (Historical Data)
+          │
+    ┌─────┴─────┐
+    ▼           ▼
+Yesterday    Monthly Analysis
+Difference   (Low / High)
+    │           │
+    └─────┬─────┘
+          ▼
+Email Notification
+          │
+          ▼
+GitHub Actions (Daily Automation)
+
+---
+
 ## 🔗 Tools Used
 
 - Python
 - Pandas
 - Requests
+- Regular Expressions (re)
 - Google Sheets API (gspread)
 - Gmail SMTP
 - GitHub Actions
@@ -91,7 +116,7 @@ The entire workflow is cloud-hosted and executes automatically through GitHub Ac
 The application is configured through:
 
 - `config.json` for investment amount, scheme name, and notification emails
-- GitHub Secrets for email credentials
+- GitHub Secrets for secure email authentication
 - Google Service Account credentials for Google Sheets integration
 
 This design allows configuration changes without modifying the source code.
@@ -109,7 +134,7 @@ This design allows configuration changes without modifying the source code.
 - Identifies monthly low-rate opportunities for investment decisions
 - Calculates gold weight acquired for a fixed investment amount
 - Monitors day-over-day price movements and trends
-- Provides automated reporting through cloud-based workflows
+- Provides cloud-based automated monitoring through GitHub Actions
 - Eliminates manual tracking and data entry
 
 ---
@@ -121,4 +146,4 @@ This design allows configuration changes without modifying the source code.
 3. Add GitHub Secrets for email and Google authentication
 4. Update the investment amount in `config.json`
 5. Run `main.py` locally or trigger the GitHub Actions workflow
-6. Review updates in Google Sheets and email notifications
+6. Review daily updates in Google Sheets and automated email notifications
